@@ -37,14 +37,17 @@ class Producer extends AbstractProducer
         $this->channel->basic_publish(
             $message,
             $this->exchangeOptions['name'],
-            $this->routingKey
+            $this->routingKey,
+            true
         );
 
         // wait
-        $this->channel->wait_for_pending_acks($timeout);
+        $this->channel->wait_for_pending_acks_returns($timeout);
     }
 
     /**
+     * 设置发送成功 ack 回调
+     *
      * @param callable $callback
      */
     public function setAckHandler(callable $callback)
@@ -53,10 +56,22 @@ class Producer extends AbstractProducer
     }
 
     /**
+     * 设置发送失败 ack 回调
+     *
      * @param callable $callback
      */
     public function setNackHandler(callable $callback)
     {
         $this->channel->set_nack_handler($callback);
+    }
+
+    /**
+     * 设置路由失败回调
+     *
+     * @param callable $callback
+     */
+    public function setReturnHandler(callable $callback)
+    {
+        $this->channel->set_return_listener($callback);
     }
 }
