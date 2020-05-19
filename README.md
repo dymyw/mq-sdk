@@ -51,6 +51,7 @@ $consumer = new Consumer($connection);
 // 回调函数
 $callback = function($messageBody) {
     var_dump($messageBody);
+    return false;
 };
 
 // 配置
@@ -63,7 +64,8 @@ $consumer
     ->setQueueOptions([
         'name'  => $config['queue_name'],
     ])
-    ->setCallback($callback);
+    ->setCallback($callback)
+    ->setMaxRetries(3);
 
 // 消费
 $consumer->consume(1);
