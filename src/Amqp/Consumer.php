@@ -66,6 +66,7 @@ class Consumer extends AbstractConsumer
 
     /**
      * @param AMQPMessage $message
+     * @throws \Exception
      */
     public function processMessage(AMQPMessage $message)
     {
@@ -84,7 +85,11 @@ class Consumer extends AbstractConsumer
             $retryCount++;
 
             // exec
-            $return = call_user_func($this->callback, $message->body);
+            try {
+                $return = call_user_func($this->callback, $message->body);
+            } catch (\Exception $e) {
+                $return = false;
+            }
 
             // return true
             if ($return) {
