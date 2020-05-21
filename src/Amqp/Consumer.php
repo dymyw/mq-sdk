@@ -87,6 +87,8 @@ class Consumer extends AbstractConsumer
             // exec
             try {
                 $return = call_user_func($this->callback, $message->body);
+            } catch (\Throwable $t) {
+                $return = false;
             } catch (\Exception $e) {
                 $return = false;
             }
