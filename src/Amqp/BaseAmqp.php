@@ -98,12 +98,6 @@ class BaseAmqp
             );
         }
 
-        if (empty($options['type'])) {
-            throw new InvalidArgumentException(
-                'You must provide an exchange type'
-            );
-        }
-
         $this->exchangeOptions = array_merge(
             $this->exchangeOptions,
             $options
