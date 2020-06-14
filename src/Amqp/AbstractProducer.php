@@ -4,6 +4,7 @@ namespace Mq\Amqp;
 
 use Mq\ProducerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Wire\AMQPTable;
 
 /**
  * Class AbstractProducer
@@ -13,9 +14,10 @@ abstract class AbstractProducer extends BaseAmqp implements ProducerInterface
 {
     /**
      * @param string $messageBody
+     * @param array $options
      * @return AMQPMessage
      */
-    public function getMessage($messageBody)
+    public function getMessage($messageBody, array $options)
     {
         $this->setParameter('delivery_mode', AMQPMessage::DELIVERY_MODE_PERSISTENT);
 
@@ -23,6 +25,10 @@ abstract class AbstractProducer extends BaseAmqp implements ProducerInterface
             $messageBody,
             $this->getParameters()
         );
+
+        if (!empty($options)) {
+            $message->set('application_headers', new AMQPTable($options));
+        }
 
         return $message;
     }

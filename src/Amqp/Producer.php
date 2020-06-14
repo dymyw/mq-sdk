@@ -26,6 +26,22 @@ class Producer extends AbstractProducer
     }
 
     /**
+     * @param string $messageBody
+     * @param int $seconds
+     */
+    public function publishDelay($messageBody, $seconds = 0)
+    {
+        $options = $seconds > 0 ? ['x-delay' => $seconds * 1000] : [];
+        $message = $this->getMessage($messageBody, $options);
+
+        $this->channel->basic_publish(
+            $message,
+            $this->exchangeOptions['name'],
+            $this->routingKey
+        );
+    }
+
+    /**
      * @param array $messageBodies
      */
     public function batchPublish(array $messageBodies)
